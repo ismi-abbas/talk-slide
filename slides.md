@@ -1,6 +1,6 @@
 ---
 # try also 'default' to start simple
-theme: default
+theme: the-unnamed
 highlighter: shiki
 info: |
   ## React dengan TanStack
@@ -200,6 +200,8 @@ fetch(`${endpoint}/${category}`).then((res) => {
 Why fetch doesn't reject on response? <a href="https://kettanaito.com/blog/why-fetch-promise-doesnt-reject-on-error-responses" target="blank">Check here</a>
 
 ---
+transition: slide-left
+---
 
 ### Solution?
 
@@ -243,4 +245,30 @@ function Bookmarks({ category }) {
   // Return JSX based on data and error state
 }
 ```
+
+```ts
+const getBookmarks = () => {
+  fetch(`${endpoint}/${category}`).then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch");
+        }
+        return res.json();
+      }),
+}
+
+function Bookmarks({ category }) {
+  const { isLoading, data, error } = useQuery({
+    queryKey: ["bookmarks", category],
+    queryFn: getBookmarks,
+  });
+
+  // Return JSX based on data and error state
+}
+```
 ````
+---
+class: 'text-center font-bold'
+---
+# Code walkthrough
+
+---
