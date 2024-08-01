@@ -29,13 +29,31 @@ TanStack is a collection of open-source software libraries and tools primarily f
 
 ---
 
-### Why do you need a tanstack?
+### Spot A Bug Here
 
-> TLDR; You need it to ease your life
+```ts
+function Bookmarks({ category }) {
+  const [data, setData] = useState([]);
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    fetch("http://localhost:3000/tasks/" + category)
+      .then((res) => res.json())
+      .then((d) => {
+        setData(d);
+      })
+      .catch((e) => {
+        setError(e);
+      });
+  }, [category]);
+}
+```
 
 ---
 
-### Race condition
+1. Race condition
+
+Which on will come first and which on will come later?
 
 ````md magic-move {lines: false}
 ```ts {*|1|14|5-14|*}
@@ -211,16 +229,26 @@ function Bookmarks({ category }) {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState();
   const [error, setError] = useState();
-  
+
   useEffect(() => {
     let ignore = false;
     setIsLoading(true);
-    fetch(`${endpoint}/${category}`).then((res) => res.json()).then((d) => {
-        if (!ignore) { setData(d); }
-      }).catch((e) => {
-        if (!ignore) { setError(e); }
-      }).finally(() => {
-        if (!ignore) { setIsLoading(false); }
+    fetch(`${endpoint}/${category}`)
+      .then((res) => res.json())
+      .then((d) => {
+        if (!ignore) {
+          setData(d);
+        }
+      })
+      .catch((e) => {
+        if (!ignore) {
+          setError(e);
+        }
+      })
+      .finally(() => {
+        if (!ignore) {
+          setIsLoading(false);
+        }
       });
     return () => {
       ignore = true;
