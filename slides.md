@@ -33,19 +33,19 @@ TanStack is a collection of open-source software libraries and tools primarily f
 
 ```ts
 function Bookmarks({ category }) {
-  const [data, setData] = useState([]);
-  const [error, setError] = useState();
+	const [data, setData] = useState([])
+	const [error, setError] = useState()
 
-  useEffect(() => {
-    fetch("http://localhost:3000/tasks/" + category)
-      .then((res) => res.json())
-      .then((d) => {
-        setData(d);
-      })
-      .catch((e) => {
-        setError(e);
-      });
-  }, [category]);
+	useEffect(() => {
+		fetch('http://localhost:3000/tasks/' + category)
+			.then(res => res.json())
+			.then(d => {
+				setData(d)
+			})
+			.catch(e => {
+				setError(e)
+			})
+	}, [category])
 }
 ```
 
@@ -58,42 +58,42 @@ Which on will come first and which on will come later?
 ````md magic-move {lines: false}
 ```ts {*|1|14|5-14|*}
 function Bookmarks({ category }) {
-  const [data, setData] = useState([]);
-  const [error, setError] = useState();
+	const [data, setData] = useState([])
+	const [error, setError] = useState()
 
-  useEffect(() => {
-    fetch("http://localhost:3000/tasks/" + category)
-      .then((res) => res.json())
-      .then((d) => {
-        setData(d);
-      })
-      .catch((e) => {
-        setError(e);
-      });
-  }, [category]);
+	useEffect(() => {
+		fetch('http://localhost:3000/tasks/' + category)
+			.then(res => res.json())
+			.then(d => {
+				setData(d)
+			})
+			.catch(e => {
+				setError(e)
+			})
+	}, [category])
 }
 ```
 
 ```ts {*|2|6-8|11-13|16-18|*}
 useEffect(() => {
-  let ignore = false;
-  fetch("http://localhost:3000/tasks/" + category)
-    .then((res) => res.json())
-    .then((d) => {
-      if (!ignore) {
-        setData(d);
-      }
-    })
-    .catch((e) => {
-      if (!ignore) {
-        setError(e);
-      }
-    });
-  // clean up function
-  return () => {
-    ignore = true;
-  };
-}, [category]);
+	let ignore = false
+	fetch('http://localhost:3000/tasks/' + category)
+		.then(res => res.json())
+		.then(d => {
+			if (!ignore) {
+				setData(d)
+			}
+		})
+		.catch(e => {
+			if (!ignore) {
+				setError(e)
+			}
+		})
+	// clean up function
+	return () => {
+		ignore = true
+	}
+}, [category])
 ```
 ````
 
@@ -107,7 +107,7 @@ useEffect(() => {
 ```
 
 ```ts
-const [isLoading, setIsLoading] = useState(false);
+const [isLoading, setIsLoading] = useState(false)
 ```
 
 ```ts {*|5|7-11|*}
@@ -137,11 +137,11 @@ Data could be empty too, so better to initialize with undefined
 
 ````md magic-move {lines: false}
 ```ts
-const [data, setData] = useState([]);
+const [data, setData] = useState([])
 ```
 
 ```ts
-const [data, setData] = useState();
+const [data, setData] = useState()
 ```
 ````
 
@@ -201,76 +201,76 @@ useEffect(() => {
 ````md magic-move {lines: false}
 ```ts
 fetch(`${endpoint}/${category}`)
-  .then((res) => res.json())
-  .then();
+	.then(res => res.json())
+	.then()
 ```
 
 ```ts
-fetch(`${endpoint}/${category}`).then((res) => {
-  if (!res.ok) {
-    throw new Error("Failed to fetch");
-  }
-  return res.json();
-});
+fetch(`${endpoint}/${category}`).then(res => {
+	if (!res.ok) {
+		throw new Error('Failed to fetch')
+	}
+	return res.json()
+})
 ```
 ````
 
 Why fetch doesn't reject on response? <a href="https://kettanaito.com/blog/why-fetch-promise-doesnt-reject-on-error-responses" target="blank">Check here</a>
 
 ---
-transition: slide-left
----
+
+## transition: slide-left
 
 ### Solution?
 
 ````md magic-move {lines:false}
 ```ts
 function Bookmarks({ category }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState();
-  const [error, setError] = useState();
+	const [isLoading, setIsLoading] = useState(true)
+	const [data, setData] = useState()
+	const [error, setError] = useState()
 
-  useEffect(() => {
-    let ignore = false;
-    setIsLoading(true);
-    fetch(`${endpoint}/${category}`)
-      .then((res) => res.json())
-      .then((d) => {
-        if (!ignore) {
-          setData(d);
-        }
-      })
-      .catch((e) => {
-        if (!ignore) {
-          setError(e);
-        }
-      })
-      .finally(() => {
-        if (!ignore) {
-          setIsLoading(false);
-        }
-      });
-    return () => {
-      ignore = true;
-    };
-  }, [category]);
+	useEffect(() => {
+		let ignore = false
+		setIsLoading(true)
+		fetch(`${endpoint}/${category}`)
+			.then(res => res.json())
+			.then(d => {
+				if (!ignore) {
+					setData(d)
+				}
+			})
+			.catch(e => {
+				if (!ignore) {
+					setError(e)
+				}
+			})
+			.finally(() => {
+				if (!ignore) {
+					setIsLoading(false)
+				}
+			})
+		return () => {
+			ignore = true
+		}
+	}, [category])
 }
 ```
 
 ```ts
 function Bookmarks({ category }) {
-  const { isLoading, data, error } = useQuery({
-    queryKey: ["bookmarks", category],
-    queryFn: () =>
-      fetch(`${endpoint}/${category}`).then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch");
-        }
-        return res.json();
-      }),
-  });
+	const { isLoading, data, error } = useQuery({
+		queryKey: ['bookmarks', category],
+		queryFn: () =>
+			fetch(`${endpoint}/${category}`).then(res => {
+				if (!res.ok) {
+					throw new Error('Failed to fetch')
+				}
+				return res.json()
+			}),
+	})
 
-  // Return JSX based on data and error state
+	// Return JSX based on data and error state
 }
 ```
 
@@ -294,9 +294,35 @@ function Bookmarks({ category }) {
 }
 ```
 ````
+
 ---
-class: 'text-center font-bold'
----
+
+## class: 'text-center font-bold'
+
 # Code walkthrough
 
 ---
+
+### Editor
+
+````md magic-move {lines:false}
+```py
+def get_full_name(first_name, last_name):
+    return full_name
+
+
+print(get_full_name("john", "doe"))
+```
+
+```py
+def get_full_name(first_name, last_name):
+    full_name = first_name.title() + " " + last_name.title()
+    return full_name
+
+print(get_full_name("john", "doe"))
+```
+````
+
+<div class="border border-red-500">
+  <img src="https://www.ismiabbas.site/jom_launch.jpeg" width=100 height=100/>
+</div>
